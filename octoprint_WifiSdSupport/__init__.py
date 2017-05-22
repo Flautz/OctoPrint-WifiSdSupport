@@ -46,7 +46,7 @@ class WifisdsupportPlugin(octoprint.plugin.SettingsPlugin,
 			)
 		)
 
-	def strip_all_comments(path, file_object, links=None, printer_profile=None, allow_overwrite=True, *args, **kwargs):
+	def save_to_wifi_sd(self, path, file_object, links=None, printer_profile=None, allow_overwrite=True, *args, **kwargs):
 		if not octoprint.filemanager.valid_file_type(path, type="gcode"):
 			return file_object
 		
@@ -64,7 +64,7 @@ def __plugin_load__():
 
 	global __plugin_hooks__
 	__plugin_hooks__ = {
-		"octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
-		"octoprint.filemanager.preprocessor": __plugin_implementation__.save_to_wifi_sd
+		"octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information,
+		"octoprint.filemanager.preprocessor"          : __plugin_implementation__.save_to_wifi_sd
 	}
 
