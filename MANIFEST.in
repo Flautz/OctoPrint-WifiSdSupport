@@ -1,0 +1,4 @@
+include README.md
+recursive-include octoprint_WifiSdSupport/templates *
+recursive-include octoprint_WifiSdSupport/translations *
+recursive-include octoprint_WifiSdSupport/static *
