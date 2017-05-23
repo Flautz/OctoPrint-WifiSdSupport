@@ -15,15 +15,21 @@ import octoprint.filemanager.util
 import requests
 
 class WifisdsupportPlugin(octoprint.plugin.SettingsPlugin,
-                          octoprint.plugin.AssetPlugin,
                           octoprint.plugin.TemplatePlugin):
 
   ##~~ SettingsPlugin mixin
 
   def get_settings_defaults(self):
     return dict(
-      # put your plugin's default settings here
+      wifi_sd_ip = ""
     )
+
+  ##~~ TemplatePlugin mixin
+
+  def get_template_configs(self):
+    return [
+      dict(type="settings", custom_bindings=False)
+    ]
 
   ##~~ Softwareupdate hook
 
@@ -33,7 +39,7 @@ class WifisdsupportPlugin(octoprint.plugin.SettingsPlugin,
     # for details.
     return dict(
       WifiSdSupport=dict(
-        displayName="Wifisdsupport Plugin",
+        displayName="WifiSdSupport Plugin",
         displayVersion=self._plugin_version,
 
         # version check: github repository
@@ -48,17 +54,20 @@ class WifisdsupportPlugin(octoprint.plugin.SettingsPlugin,
     )
 
   def save_to_wifi_sd(self, path, file_object, links=None, printer_profile=None, allow_overwrite=True, *args, **kwargs):
-    #TODO: fetch ip from plugin settings
-    url = "http://192.168.178.211/upload.cgi"
-    self._logger.info("Attempt upload: " + url + " " + file_object.filename + " " + path)
-    #upload file to sd card using wifi
-    files = {'file': (file_object.filename, file_object.stream())}
-    try:
-      r = requests.post(url, files=files)
-    except requests.exceptions.RequestException as e:
-      self._logger.info("Connection Error: {}".format(e))
+    ip = self._settings.get(["wifi_sd_ip"])
+    if ip:
+      url = "http://" + ip + "/upload.cgi"
+      self._logger.info("Attempt upload: " + url + " " + file_object.filename + " " + path)
+      #upload file to sd card using wifi
+      files = {'file': (file_object.filename, file_object.stream())}
+      try:
+        r = requests.post(url, files=files)
+      except requests.exceptions.RequestException as e:
+        self._logger.info("Connection Error: {}".format(e))
+      else:
+        self._logger.info("Response: " + r.text)
     else:
-      self._logger.info("Response: " + r.text)
+      self._logger.info("Empty Wifi Sd Card IP")
     #return unmodified file object
     return file_object
 
