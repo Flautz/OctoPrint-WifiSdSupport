@@ -12,6 +12,7 @@ from __future__ import absolute_import
 import octoprint.plugin
 import octoprint.filemanager
 import octoprint.filemanager.util
+import requests
 
 class WifisdsupportPlugin(octoprint.plugin.SettingsPlugin,
                           octoprint.plugin.AssetPlugin,
@@ -47,9 +48,18 @@ class WifisdsupportPlugin(octoprint.plugin.SettingsPlugin,
     )
 
   def save_to_wifi_sd(self, path, file_object, links=None, printer_profile=None, allow_overwrite=True, *args, **kwargs):
-    if not octoprint.filemanager.valid_file_type(path, type="gcode"):
-      return file_object
-      
+    #TODO: fetch ip from plugin settings
+    url = "http://192.168.178.211/upload.cgi"
+    self._logger.info("Attempt upload: " + url + " " + file_object.filename + " " + path)
+    #upload file to sd card using wifi
+    files = {'file': (file_object.filename, file_object.stream())}
+    try:
+      r = requests.post(url, files=files)
+    except requests.exceptions.RequestException as e:
+      self._logger.info("Connection Error: {}".format(e))
+    else:
+      self._logger.info("Response: " + r.text)
+    #return unmodified file object
     return file_object
 
 
