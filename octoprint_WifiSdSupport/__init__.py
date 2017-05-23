@@ -17,40 +17,40 @@ class WifisdsupportPlugin(octoprint.plugin.SettingsPlugin,
                           octoprint.plugin.AssetPlugin,
                           octoprint.plugin.TemplatePlugin):
 
-	##~~ SettingsPlugin mixin
+  ##~~ SettingsPlugin mixin
 
-	def get_settings_defaults(self):
-		return dict(
-			# put your plugin's default settings here
-		)
+  def get_settings_defaults(self):
+    return dict(
+      # put your plugin's default settings here
+    )
 
-	##~~ Softwareupdate hook
+  ##~~ Softwareupdate hook
 
-	def get_update_information(self):
-		# Define the configuration for your plugin to use with the Software Update
-		# Plugin here. See https://github.com/foosel/OctoPrint/wiki/Plugin:-Software-Update
-		# for details.
-		return dict(
-			WifiSdSupport=dict(
-				displayName="Wifisdsupport Plugin",
-				displayVersion=self._plugin_version,
+  def get_update_information(self):
+    # Define the configuration for your plugin to use with the Software Update
+    # Plugin here. See https://github.com/foosel/OctoPrint/wiki/Plugin:-Software-Update
+    # for details.
+    return dict(
+      WifiSdSupport=dict(
+        displayName="Wifisdsupport Plugin",
+        displayVersion=self._plugin_version,
 
-				# version check: github repository
-				type="github_release",
-				user="Flautz",
-				repo="OctoPrint-WifiSdSupport",
-				current=self._plugin_version,
+        # version check: github repository
+        type="github_release",
+        user="Flautz",
+        repo="OctoPrint-WifiSdSupport",
+        current=self._plugin_version,
 
-				# update method: pip
-				pip="https://github.com/Flautz/OctoPrint-WifiSdSupport/archive/{target_version}.zip"
-			)
-		)
+        # update method: pip
+        pip="https://github.com/Flautz/OctoPrint-WifiSdSupport/archive/{target_version}.zip"
+      )
+    )
 
-	def save_to_wifi_sd(self, path, file_object, links=None, printer_profile=None, allow_overwrite=True, *args, **kwargs):
-		if not octoprint.filemanager.valid_file_type(path, type="gcode"):
-			return file_object
-		
-		return file_object
+  def save_to_wifi_sd(self, path, file_object, links=None, printer_profile=None, allow_overwrite=True, *args, **kwargs):
+    if not octoprint.filemanager.valid_file_type(path, type="gcode"):
+      return file_object
+      
+    return file_object
 
 
 # If you want your plugin to be registered within OctoPrint under a different name than what you defined in setup.py
@@ -59,12 +59,12 @@ class WifisdsupportPlugin(octoprint.plugin.SettingsPlugin,
 __plugin_name__ = "WifiSdSupport Plugin"
 
 def __plugin_load__():
-	global __plugin_implementation__
-	__plugin_implementation__ = WifisdsupportPlugin()
+  global __plugin_implementation__
+  __plugin_implementation__ = WifisdsupportPlugin()
 
-	global __plugin_hooks__
-	__plugin_hooks__ = {
-		"octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information,
-		"octoprint.filemanager.preprocessor"          : __plugin_implementation__.save_to_wifi_sd
-	}
+  global __plugin_hooks__
+  __plugin_hooks__ = {
+    "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information,
+    "octoprint.filemanager.preprocessor"          : __plugin_implementation__.save_to_wifi_sd
+  }
 
