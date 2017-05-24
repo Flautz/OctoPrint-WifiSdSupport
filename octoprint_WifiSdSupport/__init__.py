@@ -21,7 +21,7 @@ class WifisdsupportPlugin(octoprint.plugin.SettingsPlugin,
 
   def get_settings_defaults(self):
     return dict(
-      wifi_sd_ip = ""
+      wifi_sd_ip = "flashair"
     )
 
   ##~~ TemplatePlugin mixin
