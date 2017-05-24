@@ -65,7 +65,7 @@ class WifisdsupportPlugin(octoprint.plugin.SettingsPlugin,
       except requests.exceptions.RequestException as e:
         self._logger.info("Connection Error: {}".format(e))
       else:
-        self._logger.info("Response: " + r.text)
+        self._logger.info("Response: " + r.text.replace('\r','').replace('\n',''))
     else:
       self._logger.info("Empty Wifi Sd Card IP")
     #return unmodified file object
