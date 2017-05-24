@@ -68,6 +68,9 @@ class WifisdsupportPlugin(octoprint.plugin.SettingsPlugin,
         self._logger.info("Response: " + r.text.replace('\r','').replace('\n',''))
     else:
       self._logger.info("Empty Wifi Sd Card IP")
+    #refresh sd card files
+    if self._printer.is_operational():
+      self._printer.commands("M20")
     #return unmodified file object
     return file_object
 
